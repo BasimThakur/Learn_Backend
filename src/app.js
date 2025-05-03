@@ -15,4 +15,13 @@ app.use(express.static("public"))
 app.use(cookieParser())
 
 
-export default app; 
+//Routes imports
+import userRouter from './routes/user.routes.js'
+
+
+
+//routes decleration
+app.use("/api/v1/users", userRouter);  //("urls by user"/ which router should activate!)
+
+
+export {app}; 

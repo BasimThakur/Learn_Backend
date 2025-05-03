@@ -11,10 +11,12 @@ cloudinary.config({
 const uploadOnCloudinary = async (localFilePath) => {
   try {
     if (!localFilePath) return "Could not find the Path!"; //Nhi mila to ye retutn kro
+    
     //Upload file on Cloudinary
     const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
     });
+
     //file has been uploaded successfully
     console.log("File is uploaded on Cloudinary!", response.url);
     return response;

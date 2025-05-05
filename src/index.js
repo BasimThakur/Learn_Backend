@@ -6,7 +6,7 @@ import {app} from './app.js'
 // const app = express(); //i import it mistakly gave an error =>  Identifier 'app' has already been declared
 
 dotenv.config({
-  path: "./env",
+  path: "./.env",
 });
 
 connectDB()

@@ -2,6 +2,7 @@ import {asyncHandler} from '../utils/asyncHandler.js';
 import { ApiError } from '../utils/ApiError.js';
 import {User} from '../models/user.model.js'
 import { uploadOnCloudinary } from '../utils/Coludinary.js'
+import { ApiResponse } from '../utils/ApiResponse.js';
 
 const registerUser = asyncHandler(async (req, res) =>{
     //what we want to do here is to register a user.
@@ -36,7 +37,7 @@ const registerUser = asyncHandler(async (req, res) =>{
     }
     
     //check email/username already exists or not. 
-    const exsistedUser = User.findOne({
+    const exsistedUser = await User.findOne({
         $or: [{ username }, { email }]
     })
     
@@ -82,7 +83,7 @@ const registerUser = asyncHandler(async (req, res) =>{
    }
 
    // Return all if user successfully registered.
-   return res.status(201).json(
+   return res.status(200).json(
     new ApiResponse(200, createdUser, "User registered Successfully!")
    )  
 

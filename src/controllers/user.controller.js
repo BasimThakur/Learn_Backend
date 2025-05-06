@@ -4,6 +4,23 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/Coludinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
+
+const generateAccessAndRefereshToken = async(userId) => {
+  try {
+    const user = await User.findById(userId)
+    const accessToken = user.generateAccessToken()
+    const refereshToken = user .generateRefreshToken()
+
+    user.refershToken = refershToken
+    user.save({ validateBeforeSave: false })
+
+    return{accessToken, refereshToken}
+
+  } catch (error) {
+    throw new ApiError(500, "Something wents wrong while generating referesh and access token!")
+  }
+}
+
 const registerUser = asyncHandler(async (req, res) => {
   //what we want to do here is to register a user.
   // get user details from frontend.
@@ -96,4 +113,36 @@ const registerUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, createdUser, "User registered Successfully!"));
 });
 
-export { registerUser };
+const loginUser = asyncHandler(async(req, res) => {
+  // req body se data lao
+  // username/email hai ya nai
+  // find user
+  // password verify
+  // Generate access and refresh token!
+  // send cookie
+
+  const { email, username, password } = req.body
+
+  if (!username || !email) {
+    throw new ApiError(400, "Username or Email is required!")
+  }
+
+  const user = await User.findOne({
+    $or: [{username}, {email}]
+  })
+
+  if(!username){
+    throw new ApiError(404, "Username does not exist!")
+  }
+
+  const isPasswordvalid = await user.isPasswordCorrect(password)
+
+  if(!isPasswordvalid){
+    throw new ApiError(401, "Invalid user credentials!")
+  }  
+
+})
+
+export { registerUser,
+        loginUser        
+};
